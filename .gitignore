@@ -1,0 +1,17 @@
+# Bí mật — KHÔNG đưa lên GitHub
+.upload-password
+.env*
+.dev.vars*
+
+# Ảnh người dùng đăng (server.py tự tạo lại thư mục)
+uploads/
+
+# Bản build để deploy (chép từ index.html, css/, js/)
+dist/
+
+# Công cụ / cache
+.wrangler/
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store

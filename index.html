@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Phú Thi Dev · Thư viện ảnh</title>
+  <meta name="description" content="Demo giao diện thư viện ảnh cho studio chụp ảnh.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600;700;800&family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Màn chờ -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div>
+      <div class="loader-name" id="loaderName"></div>
+      <p class="loader-sub">thư viện ảnh</p>
+      <div class="loader-bar"><i></i></div>
+    </div>
+  </div>
+
+  <!-- Con trỏ tuỳ biến -->
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <div class="cursor-ring"><span class="cursor-label"></span></div>
+    <div class="cursor-dot"></div>
+  </div>
+
+  <div id="app"></div>
+
+  <!-- Xem ảnh lớn -->
+  <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Xem ảnh">
+    <div class="lb-bg lb-fade"></div>
+    <div class="lb-ambient lb-fade"><img id="lbAmbient" alt=""></div>
+    <div class="lb-progress"><i id="lbProg"></i></div>
+    <header class="lb-top lb-fade">
+      <button class="icon-btn" id="lbClose" aria-label="Quay lại" data-icon="arrowLeft"></button>
+      <span class="lb-count" id="lbCount"></span>
+      <div class="lb-actions">
+        <button class="icon-btn fav" id="lbFav" aria-label="Yêu thích" data-icon="heart"></button>
+        <button class="icon-btn" id="lbDl" aria-label="Tải ảnh" data-icon="download"></button>
+        <button class="icon-btn" id="lbShare" aria-label="Chia sẻ" data-icon="share"></button>
+        <button class="icon-btn" id="lbPlay" aria-label="Trình chiếu" data-icon="play"></button>
+      </div>
+    </header>
+    <div class="lb-stage" id="lbStage">
+      <button class="lb-nav prev lb-fade" id="lbPrev" aria-label="Ảnh trước" data-icon="chevL"></button>
+      <figure class="lb-figure" data-cursor="Kéo"><img class="lb-img" id="lbImg" alt="" draggable="false"></figure>
+      <button class="lb-nav next lb-fade" id="lbNext" aria-label="Ảnh sau" data-icon="chevR"></button>
+    </div>
+    <p class="lb-caption lb-fade" id="lbCaption"></p>
+    <div class="lb-strip lb-fade" id="lbStrip"></div>
+  </div>
+
+  <!-- Tìm kiếm -->
+  <div class="search" id="search" hidden>
+    <button class="icon-btn search-close" id="searchClose" aria-label="Đóng" data-icon="close"></button>
+    <p class="search-kicker">Tìm bộ ảnh</p>
+    <input id="searchInput" type="search" placeholder="Nàng thơ, cưới, sang chảnh…" autocomplete="off">
+    <div class="search-results" id="searchResults"></div>
+  </div>
+
+  <!-- Đăng ảnh -->
+  <div class="up" id="up" hidden>
+    <div class="up-backdrop" data-up-close></div>
+    <div class="up-panel" role="dialog" aria-modal="true" aria-labelledby="upTitle">
+      <header class="up-head">
+        <div><p class="up-kicker">Thư viện của bạn</p><h2 id="upTitle">Đăng ảnh mới</h2></div>
+        <button class="icon-btn" data-up-close aria-label="Đóng" data-icon="close"></button>
+      </header>
+      <form class="up-lock" id="upLock" autocomplete="off">
+        <span class="drop-ic" data-icon="lock"></span>
+        <strong>Nhập mật khẩu để đăng ảnh</strong>
+        <span>Chỉ người có mật khẩu mới đăng được ảnh lên thư viện.</span>
+        <div class="up-lock-row">
+          <input type="password" id="upPass" inputmode="numeric" autocomplete="current-password" placeholder="Mật khẩu" aria-label="Mật khẩu đăng ảnh">
+          <button class="btn-dark" id="upUnlock" type="submit">Mở khoá</button>
+        </div>
+        <p class="up-lock-err" id="upLockErr" aria-live="polite"></p>
+      </form>
+      <div class="up-body">
+        <label class="drop" id="drop">
+          <input type="file" id="upInput" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden>
+          <span class="drop-ic" data-icon="upload"></span>
+          <strong>Kéo thả ảnh vào đây</strong>
+          <span>hoặc <u>chọn từ máy</u> · dán bằng Ctrl+V</span>
+          <small>JPG, PNG, WEBP, GIF · ảnh lớn tự thu nhỏ còn 2000px</small>
+        </label>
+        <div class="up-list" id="upList"></div>
+        <div class="up-opts">
+          <label>Bộ ảnh<select id="upColl"></select></label>
+          <label>Nhóm (tab lọc)<select id="upCat"></select></label>
+        </div>
+      </div>
+      <footer class="up-foot">
+        <span id="upSummary">Chưa chọn ảnh nào</span>
+        <button class="btn-dark" id="upSend" disabled>Đăng ảnh</button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <button class="to-top" id="toTop" aria-label="Lên đầu trang">
+    <svg class="ring" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22"/></svg>
+    <span data-icon="arrowUp"></span>
+  </button>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

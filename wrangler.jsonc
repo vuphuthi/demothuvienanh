@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "phu-thi-dev",
+  "compatibility_date": "2026-11-18",
+  "observability": {
+    "enabled": true
+  },
+  // CHỈ đưa thư mục dist/ lên (không có server.py, uploads/, .upload-password)
+  "assets": {
+    "directory": "./dist"
+  }
+}
